@@ -38,6 +38,20 @@ npm run dev
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
+## 🌐 GitHub Pages Deployment
+
+This project is configured to automatically deploy to GitHub Pages. To enable deployment:
+
+1. Go to your repository **Settings** → **Pages**
+2. Under **Build and deployment**, select **Source**: "GitHub Actions"
+3. The site will automatically deploy when you push to the `main` branch
+4. You can also manually trigger a deployment from the **Actions** tab
+
+The deployment workflow will:
+- Build the Next.js app as a static site
+- Deploy it to GitHub Pages
+- Make your site available at `https://[username].github.io/mdarktopdf/`
+
 ## 🛠️ Tech Stack
 
 - **Next.js 16** - React framework for production
