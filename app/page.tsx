@@ -40,13 +40,7 @@ export default function Home() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
-                className="text-6xl md:text-8xl font-bold mb-4"
-                style={{
-                  background: 'linear-gradient(135deg, #a8d5ba 0%, #c5e8c1 50%, #b4d4d3 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
+                className="text-6xl md:text-8xl font-bold mb-4 gradient-text"
               >
                 MDark
               </motion.h1>

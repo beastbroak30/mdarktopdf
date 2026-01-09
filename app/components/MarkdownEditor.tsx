@@ -69,12 +69,14 @@ greet('World');
 export default function MarkdownEditor() {
   const [markdown, setMarkdown] = useState(defaultMarkdown);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   const handleDownloadPDF = async () => {
     if (!previewRef.current) return;
 
     setIsGenerating(true);
+    setError(null);
 
     try {
       // Create a clone of the preview element for PDF generation
@@ -117,9 +119,9 @@ export default function MarkdownEditor() {
 
       // Save PDF
       pdf.save('markdown-document.pdf');
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
+    } catch (err) {
+      console.error('Error generating PDF:', err);
+      setError('Failed to generate PDF. Please try again.');
     } finally {
       setIsGenerating(false);
     }
@@ -135,15 +137,7 @@ export default function MarkdownEditor() {
         className="border-b border-[#2d5a45] bg-[#0a0a0a]/80 backdrop-blur-sm sticky top-0 z-10"
       >
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 
-            className="text-3xl font-bold"
-            style={{
-              background: 'linear-gradient(135deg, #a8d5ba 0%, #c5e8c1 50%, #b4d4d3 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
+          <h1 className="text-3xl font-bold gradient-text">
             MDark
           </h1>
           <motion.button
@@ -167,6 +161,27 @@ export default function MarkdownEditor() {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6">
+        {/* Error Notification */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mb-4 bg-red-900/50 border border-red-700 rounded-lg p-4 flex items-center justify-between"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">⚠️</span>
+              <p className="text-red-200">{error}</p>
+            </div>
+            <button
+              onClick={() => setError(null)}
+              className="text-red-200 hover:text-white transition-colors"
+            >
+              ✕
+            </button>
+          </motion.div>
+        )}
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
