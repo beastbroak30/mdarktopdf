@@ -66,10 +66,24 @@ greet('World');
 **Try editing this markdown or write your own!**
 `;
 
+const FONT_OPTIONS = [
+  { name: 'Sans-serif', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' },
+  { name: 'Arial', value: 'Arial, sans-serif' },
+  { name: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+  { name: 'Inter', value: 'Inter, sans-serif' },
+  { name: 'Roboto', value: 'Roboto, sans-serif' },
+  { name: 'Open Sans', value: '"Open Sans", sans-serif' },
+  { name: 'Lato', value: 'Lato, sans-serif' },
+  { name: 'Montserrat', value: 'Montserrat, sans-serif' },
+  { name: 'Poppins', value: 'Poppins, sans-serif' },
+  { name: 'Nunito', value: 'Nunito, sans-serif' },
+];
+
 export default function MarkdownEditor() {
   const [markdown, setMarkdown] = useState(defaultMarkdown);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedFont, setSelectedFont] = useState(FONT_OPTIONS[0].value);
   const previewRef = useRef<HTMLDivElement>(null);
 
   const handleDownloadPDF = async () => {
@@ -136,41 +150,54 @@ export default function MarkdownEditor() {
         transition={{ duration: 0.6 }}
         className="border-b border-[#2d5a45] bg-[#0a0a0a]/80 backdrop-blur-sm sticky top-0 z-10"
       >
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-3xl font-bold gradient-text">
+        <div className="container mx-auto px-3 py-2 flex items-center justify-between flex-wrap gap-2">
+          <h1 className="text-2xl font-bold gradient-text">
             MDark
           </h1>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleDownloadPDF}
-            disabled={isGenerating}
-            className="px-6 py-2 bg-gradient-to-r from-[#2d5a45] to-[#3a7356] text-[#c5e8c1] rounded-lg font-semibold hover:from-[#3a7356] hover:to-[#4a8b67] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isGenerating ? (
-              <span className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-[#c5e8c1] border-t-transparent rounded-full animate-spin" />
-                Generating...
-              </span>
-            ) : (
-              '📄 Download PDF'
-            )}
-          </motion.button>
+          <div className="flex items-center gap-3">
+            <select
+              value={selectedFont}
+              onChange={(e) => setSelectedFont(e.target.value)}
+              className="px-3 py-1.5 text-sm bg-[#1a3a2e] text-[#a8d5ba] border border-[#2d5a45] rounded-md focus:outline-none focus:ring-2 focus:ring-[#3a7356]"
+            >
+              {FONT_OPTIONS.map((font) => (
+                <option key={font.name} value={font.value}>
+                  {font.name}
+                </option>
+              ))}
+            </select>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleDownloadPDF}
+              disabled={isGenerating}
+              className="px-4 py-1.5 text-sm bg-gradient-to-r from-[#2d5a45] to-[#3a7356] text-[#c5e8c1] rounded-md font-semibold hover:from-[#3a7356] hover:to-[#4a8b67] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isGenerating ? (
+                <span className="flex items-center gap-2">
+                  <div className="w-3 h-3 border-2 border-[#c5e8c1] border-t-transparent rounded-full animate-spin" />
+                  Generating...
+                </span>
+              ) : (
+                '📄 PDF'
+              )}
+            </motion.button>
+          </div>
         </div>
       </motion.header>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-3 py-4">
         {/* Error Notification */}
         {error && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="mb-4 bg-red-900/50 border border-red-700 rounded-lg p-4 flex items-center justify-between"
+            className="mb-3 bg-red-900/50 border border-red-700 rounded-md p-3 flex items-center justify-between text-sm"
           >
             <div className="flex items-center gap-2">
-              <span className="text-2xl">⚠️</span>
+              <span className="text-xl">⚠️</span>
               <p className="text-red-200">{error}</p>
             </div>
             <button
@@ -186,7 +213,7 @@ export default function MarkdownEditor() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-[calc(100vh-120px)]"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-[calc(100vh-100px)]"
         >
           {/* Editor Panel */}
           <motion.div
@@ -195,16 +222,25 @@ export default function MarkdownEditor() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col"
           >
-            <div className="bg-[#1a1a1a]/90 rounded-lg border border-[#2d5a45] overflow-hidden shadow-2xl flex flex-col h-full">
-              <div className="bg-[#1a3a2e] px-4 py-3 border-b border-[#2d5a45]">
-                <h2 className="text-lg font-semibold text-[#a8d5ba]">
-                  ✏️ Markdown Editor
+            <div className="bg-[#1a1a1a]/90 rounded-md border border-[#2d5a45] overflow-hidden shadow-xl flex flex-col h-full">
+              <div className="bg-[#1a3a2e] px-3 py-2 border-b border-[#2d5a45] flex items-center justify-between">
+                <h2 className="text-base font-semibold text-[#a8d5ba]">
+                  ✏️ Editor
                 </h2>
+                <a
+                  href="https://github.com/beastbroak30"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-[#2d5a45] to-[#3a7356] text-[#c5e8c1] rounded text-xs font-medium hover:from-[#3a7356] hover:to-[#4a8b67] transition-all shadow-sm"
+                >
+                  Made with ❤️ by beastbroak30
+                </a>
               </div>
               <textarea
                 value={markdown}
                 onChange={(e) => setMarkdown(e.target.value)}
-                className="flex-1 w-full p-4 bg-transparent text-[#ededed] font-mono resize-none focus:outline-none"
+                style={{ fontFamily: selectedFont }}
+                className="flex-1 w-full p-3 bg-transparent text-[#ededed] resize-none focus:outline-none text-sm"
                 placeholder="Type your markdown here..."
                 spellCheck={false}
               />
@@ -218,15 +254,16 @@ export default function MarkdownEditor() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col"
           >
-            <div className="bg-[#1a1a1a]/90 rounded-lg border border-[#2d5a45] overflow-hidden shadow-2xl flex flex-col h-full">
-              <div className="bg-[#1a3a2e] px-4 py-3 border-b border-[#2d5a45]">
-                <h2 className="text-lg font-semibold text-[#a8d5ba]">
-                  👁️ Live Preview
+            <div className="bg-[#1a1a1a]/90 rounded-md border border-[#2d5a45] overflow-hidden shadow-xl flex flex-col h-full">
+              <div className="bg-[#1a3a2e] px-3 py-2 border-b border-[#2d5a45]">
+                <h2 className="text-base font-semibold text-[#a8d5ba]">
+                  👁️ Preview
                 </h2>
               </div>
               <div
                 ref={previewRef}
-                className="flex-1 p-6 overflow-auto markdown-preview text-[#ededed] bg-[#0a0a0a]"
+                style={{ fontFamily: selectedFont }}
+                className="flex-1 p-4 overflow-auto markdown-preview text-[#ededed] bg-[#0a0a0a] text-sm"
               >
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
@@ -264,10 +301,17 @@ export default function MarkdownEditor() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.4 }}
-        className="border-t border-[#2d5a45] bg-[#0a0a0a]/80 backdrop-blur-sm mt-6"
+        className="border-t border-[#2d5a45] bg-[#0a0a0a]/80 backdrop-blur-sm mt-4"
       >
-        <div className="container mx-auto px-4 py-4 text-center text-[#a8d5ba] text-sm">
-          Made with 💚 by MDark | Free Markdown to PDF Converter
+        <div className="container mx-auto px-3 py-2 text-center">
+          <a
+            href="https://github.com/beastbroak30"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[#a8d5ba] text-xs hover:text-[#c5e8c1] transition-colors"
+          >
+            Made with ❤️ by beastbroak30
+          </a>
         </div>
       </motion.footer>
     </div>
